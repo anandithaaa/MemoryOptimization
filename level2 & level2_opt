@@ -1,0 +1,73 @@
+/*
+ * author:Ananditha Raghunath	 
+ * 
+ */
+  
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "proj3.h"
+
+// I changed calloc to malloc and then condensed the 4 for loops into 1. I also reordered the struct for the floats to be near, the ints to follow, and the chars to be at the end.
+
+char * level_2()
+{    
+    data_2 * B = (data_2 * ) calloc( LARGER, sizeof(data_2) ) ;
+    if (!B) return 0; 
+    double sum_f = 0.0;
+    double sum_n = 0; 
+    char * sum_c = (char*) malloc( (2*LARGER + 1) * sizeof(char) );    
+    sum_c[2*LARGER] = '\0'; 
+    
+    int i; 
+
+    for(i = 0; i < LARGER; i++){
+        sum_f += B[i].f1 + B[i].f2; 
+    }
+
+    for(i = 0; i < LARGER; i++){
+        sum_n += B[i].n1 + B[i].n2; 
+    }
+
+    for(i = 0; i < LARGER; i++){ 
+        sum_c[2*i] = B[i].c1;
+    }
+
+    for(i = 0; i < LARGER; i++){
+        sum_c[2*i+1] = B[i].c2;
+    }
+    
+    
+    free(B); 
+    return sum_c;
+}
+
+
+
+char * level_2_opt()
+{    
+   // Changed calloc into malloc
+    data_3 * B = (data_3 * ) malloc(sizeof(data_3) ) ;
+    if (!B) return 0;
+ 
+    // DO NOT modify the following declarations 
+    double sum_f = 0.0;
+    double sum_n = 0; 
+    char * sum_c = (char*) malloc( (2*LARGER + 1) * sizeof(char) );    
+    sum_c[2*LARGER] = '\0';     
+    
+    //condensed the for loops
+    int i = 0;
+  
+    for(i = LARGER-1; i >= 0; i--){
+	sum_f += B[i].f1 + B[i].f2;
+        sum_n += B[i].n1 + B[i].n2;
+    } for(i = 0; i < LARGER; i+=2) {
+        sum_c[i] = B[i].c1;
+        sum_c[i + 1] = B[i].c2;
+   }
+ 
+    free(B);    
+    //DO NOT modify the rest of this function 
+    return sum_c;
+}
