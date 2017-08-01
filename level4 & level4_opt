@@ -1,0 +1,91 @@
+/*
+ * author:Ananditha Raghunath 
+ * 
+ */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "proj3.h"
+
+
+// I condensed the 2 sets of for loops into 1.
+
+void level_4(node** head, int length)
+{
+    // malloc a contiguous block of memory on the heap
+    // that is big enough for the entire list.
+    node* new_list = malloc(sizeof(node) * length);
+
+    // go through the list and make a copy of all the 
+    // nodes and place them into the contiguous block in order
+    node* n = *head;
+    int i;
+    for(i = 0 ; i < length ; ++i) {
+        node copy = { n->value, NULL };
+        new_list[i] = copy;
+        n = n->next;
+    }
+
+    // go through the list again and "link" each node in 
+    // the contiguous block to the next node in memory; 
+    // free all the nodes in the old list
+    n = *head;
+    for(i = 0 ; i < length - 1 ; ++i) {
+        // link each node in the new list
+        new_list[i].next = &new_list[i+1];
+        // free the old nodes
+        node* free_me = n;
+        n = n->next;
+        free(free_me);
+    }
+
+    // free the last node of the old list
+    free(n);
+
+    // point head at the new packed list
+    *head = new_list;
+}
+
+void level_4_opt(node** head, int length)
+{
+
+    node* new_list = malloc(sizeof(node) * length);
+  //pointer to the node itself in the array and deref 2 times
+
+    node* n = *head;
+    int i= 0;
+    data * d;
+    for(i = 0 ; i < length ; ++i) {
+        d = &(n->value);
+        memcpy(&new_list[i].value, d, sizeof(data));
+        new_list[i].next = &new_list[i+1];
+        node* free_me = n;
+        n = n->next;
+        free(free_me);
+  }
+ // free the last node of the old list
+    free(n);
+    // point head at the new packed list
+    *head = new_list;
+}
+
+
+
+/* DO NOT MODIFY THE FUNCTION THAT FOLLOWS */
+
+
+void addFront(data * s,  node ** head) {
+    if (head == 0 ) return;
+    if (s == 0 ) return; 
+    
+    //allocate memory for storing the node 
+    node *n = ( node *)malloc(sizeof( node));
+    //make sure that the memory was allocated,
+    //if not, just quit
+    if (n == NULL) return;
+    n->value = *s;
+    
+    n->next = (*head);
+    (*head) = n;
+}
