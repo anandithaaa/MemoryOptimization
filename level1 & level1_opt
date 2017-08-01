@@ -1,0 +1,56 @@
+/*
+ * author: Ananditha Raghunath 
+ */
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "proj3.h"
+
+//I split the double for loop into 2 sets of double for loops with the loop orientation swapped for the A array so that we access in row major order.
+// This makes full use of the cache line thats brought up.
+
+long level_1(long * B, long * A, int x)
+{
+    long * C = (long * ) malloc (N*sizeof(long) );
+    if (!C) return 0; 
+    
+    int c, r; 
+
+    for(c = 0; c < N; c++)
+        for(r = 0; r < N; r++)
+            C[ r ] += B[ r*N + c ] + A[ c*N + r ] ;
+
+    long ret = C[x];
+    free (C); C = 0; 
+    return ret;
+}
+
+long level_1_opt(long * B, long * A, int x)
+{
+    // DO NOT modify the following declarations 
+    long * C = (long * ) malloc (N*sizeof(long) );
+    if (!C) return 0; 
+    
+    // using a temp variable and copying to the stack only once made no difference.
+    int c, r;
+    long counterB;
+    long counterA;
+  for(r = 0; r < N; r++) {
+        counterB = 0;
+	for(c = 0; c < N; c++) {   
+	C[r] += B[r*N + c];
+//	counterB += B[r*N + c];
+	}//C[r] = counterB;
+  }
+
+	for(c = 0; c < N; c++) {
+		counterA = 0;
+		for(r = 0; r < N; r++) { 
+		C[r] += A[c*N + r];	
+	//	counterA += A[c*N + r]; 
+		} //C[r] = counterA;	
+  	}
+    long ret = C[x];
+    free (C); C = 0; 
+    return ret;
+}
